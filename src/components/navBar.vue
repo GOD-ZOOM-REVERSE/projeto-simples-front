@@ -7,7 +7,7 @@
 
       <b-collapse id="nav-collapse" is-nav class="justify-content-between">
         <b-navbar-nav>
-          <b-nav-item href="#">produtos</b-nav-item>
+          <b-nav-item href="#" @click="$router.push('/produtos')">produtos</b-nav-item>
         </b-navbar-nav>
 
         <!-- Right aligned nav items -->
