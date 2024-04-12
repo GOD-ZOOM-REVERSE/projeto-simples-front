@@ -15,6 +15,7 @@
           </div>
           <b-link class="bg-transparent border-0 text-primary" @click="isCadastro = !isCadastro">{{ isCadastro ? 'Logar' : 'Cadastrar' }}</b-link>
           <b-button variant="success" class="w-50" @click="action">{{ isCadastro ? 'Cadastrar' : 'Entrar' }}</b-button>
+          <span v-if="messageErro" class="text-danger my-0">{{ messageErro }}</span>
         </div>
       </div>
     </div>
@@ -31,7 +32,8 @@ export default {
       name: null,
       password: null,
       redefinicaoPassword: null,
-      isCadastro: false
+      isCadastro: false,
+      messageErro: '',
     }
   },
   methods: {
@@ -39,19 +41,26 @@ export default {
       this.isCadastro ? this.cadastrar() : this.logar();
     },
     async logar() {
+      this.messageErro = null;
       accountServices.Login({
         Name: this.name,
         Password: this.password
       }).then(() => {
-        this.$router.push('/')
+        this.$router.push('/');
       }).catch(err => {
-        console.log(err)
+        this.messageErro = err.message;
       })
     },
     async cadastrar() {
+      this.messageErro = null;
       accountServices.Register({
         Name: this.name,
         Password: this.password
+      }).then(() => {
+        console.log("Cadastrou");
+        this.isCadastro = false;
+      }).catch(err => {
+        this.messageErro = err;
       })
     }
   }
@@ -84,7 +93,7 @@ export default {
   color: #fff;
 }
 
-.custom-layout svg {
+.custom-layout .size-icon {
   top: 0;
 }
 
@@ -115,5 +124,6 @@ export default {
 .size-icon {
   width: 100%;
   height: 25%;
+  padding: 30px 0;
 }
 </style>

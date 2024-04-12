@@ -9,7 +9,7 @@ export default {
     try {
       await axios.post(`/account/login`, dados)
     } catch(err) {
-      return err.response.data
+      throw err.response.data
     }
   },
 
@@ -17,7 +17,10 @@ export default {
     try {
       await axios.post(`/account/register`, dados);
     } catch(err) {
-      console.log(err)
+      throw err.response.data
     }
+  },
+  async Deslogar() {
+    await axios.post(`/account/deslogar`);
   }
 }

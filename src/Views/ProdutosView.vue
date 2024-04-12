@@ -2,7 +2,7 @@
   <div class="container my-2">
     {{ getProdutos }}
     <div class="w-100 d-flex justify-content-end my-3">
-      <b-button variant="primary" @click="showModal">Cadastrar</b-button>
+      <b-button variant="primary" @click="showModal(null)">Cadastrar</b-button>
     </div>
 
     <b-modal
@@ -110,7 +110,7 @@ export default {
       ],
       produtos: [],
       show: false,
-      nome: '',
+      nome: null,
       valorUnitario: null,
       isEditar: false,
       codigo: null

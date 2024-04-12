@@ -84,8 +84,11 @@ export default {
           key: 'status',
         },
         {
+          key: 'fornecedor'
+        },
+        {
           key: 'actions'
-        }
+        },
       ],
       subFields: [
         {
