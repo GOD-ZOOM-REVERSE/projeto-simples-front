@@ -53,6 +53,13 @@
         </b-form-checkbox>
         <b-form-input :id="`type-number`" :type="'number'" class="w-25" v-model="produto.quantidades" @input="produto.status = isEditar ? true : produto.quantidades > 0 ? true : false"></b-form-input>
       </form>
+      <b-form-textarea
+        id="textarea"
+        v-model="observacao"
+        placeholder="Enter something..."
+        rows="3"
+        max-rows="6"
+      ></b-form-textarea>
       <template #modal-footer="{ cancel, ok }">
         <div class="w-100 d-flex justify-content-end ajuste-gap">
           <b-button @click="cancel">Cancelar</b-button>
@@ -81,10 +88,13 @@ export default {
           label: 'Valor Total'
         },
         {
-          key: 'status',
+          key: 'fornecedor'
         },
         {
-          key: 'fornecedor'
+          key: 'observacao'
+        },
+        {
+          key: 'status',
         },
         {
           key: 'actions'
@@ -112,11 +122,13 @@ export default {
       show: false,
       selected: null,
       produtosPedidos: null,
-      idPedidoCompras: null
+      idPedidoCompras: null,
+      observacao: null
     }
   },
   created() {
     pedidosComprasServices.GetProtudos().then(res => {
+      this.observacao = res.observacao;
       this.pedidosCompras = res.map(value => {
         value.valorTotal = value.valorTotal.toFixed(2);
         if(value.status == 1) {
@@ -142,6 +154,7 @@ export default {
   methods: {
     showModal(id, produtosPedidos = null) {
       if (id) {
+        this.observacao = this.pedidosCompras.find(f => f.id == id).observacao;
         this.produtosPedidos = produtosPedidos.map(value => {
           return { id: value.id, text: value.produto.nome, value: value.produto.codigo, preco: value.produto.valorUnitario, quantidades: value.quantidade, status: id != null ? true : value.quantidade > 0 ? true : false }
         });
@@ -149,6 +162,7 @@ export default {
         this.idPedidoCompras = id;
       }  else {
         produtosServices.GetProtudos().then(res => {
+          this.observacao = res.observacao;
           this.produtosPedidos = res.map(value => {
             return { text: value.nome, value: value.codigo, preco: value.valorUnitario, quantidades: 0, status: false }
           });
@@ -173,10 +187,12 @@ export default {
             ProdutoCodigo: value.value
           }
         }),
-        Status: 1
+        Status: 1,
+        Observacao: this.observacao
       };
       await pedidosComprasServices.Salvar(obj);
       pedidosComprasServices.GetProtudos().then(res => {
+        this.observacao = res.observacao;
         this.pedidosCompras = res.map(value => {
           value.valorTotal = value.valorTotal.toFixed(2);
           if(value.status == 1) {
@@ -207,7 +223,8 @@ export default {
             ProdutoCodigo: value.value
           }
         }),
-        Status: 1
+        Status: 1,
+        Observacao: this.observacao
       };
       await pedidosComprasServices.Editar(obj);
       await this.updatePedidosCompras();
@@ -219,6 +236,7 @@ export default {
     },
     async updatePedidosCompras() {
       pedidosComprasServices.GetProtudos().then(res => {
+        this.observacao = res.observacao;
         this.pedidosCompras = res.map(value => {
           value.valorTotal = value.valorTotal.toFixed(2);
           if(value.status == 1) {
